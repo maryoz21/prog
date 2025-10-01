@@ -1,9 +1,11 @@
-# Funcion que le das una lista y devuelve la lista inversa
+import lists 
 
-def reverse_list(list1):
-    if len(list1) == 0:
-        return []
-    return list1[::-1]
 
 list1 = [5]
 print(reverse_list(list1)) 
+
+
+posicion = generate_serie_6(0)
+print(posicion)
+
+
