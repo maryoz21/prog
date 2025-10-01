@@ -19,7 +19,6 @@ def generate_serie_1(n: int):
         i += 1
     return result
 
-list = generate_serie_1(0)
 
 # Funcion que devuelve una serie con x numeros que d
 
@@ -34,8 +33,7 @@ def generate_serie_2(n: int):
 
     return result
 
-list = generate_serie_2(0)
-
+# Funcion que le das un numero y te devuelve la serie de potencias de 2
 
 def generate_serie_3(n: int):
     result = []
@@ -47,7 +45,7 @@ def generate_serie_3(n: int):
         i += 1
     return result
 
-list = generate_serie_3(5)
+
 
 
 
@@ -69,9 +67,8 @@ def generate_serie_4(n: int):
         i += 1
     return result
 
-list = generate_serie_4(14)
 
-
+# Funcion que le das un numero y te devuelve la serie de collatz
 
 def es_par(n: int):
     if n % 2 == 0:
@@ -89,10 +86,14 @@ def generate_serie_5(n: int):
         else:
             n *= 3 + 1
             result.append(n)
-    return result
+            
+# Funcion que le paso un entero y me genera la siguiente serie
+# 4 
+# [1, 2, 3, 4]
 
-list = generate_serie_5(-4)
 
+
+# Le das un numero y te devuelvo ese numero de veces el fibonacci
 
 def generate_serie_6(n:int):
     last_number = 0
@@ -109,8 +110,7 @@ def generate_serie_6(n:int):
         result.append(suma)
         i += 1
     return result
-list = generate_serie_6(-6)
-print(list)
+
 
 # Le das un numero y devuelve la posicion del fibonacci
 def generate_serie_7(n:int):
@@ -126,3 +126,11 @@ def generate_serie_7(n:int):
         number = suma
         i += 1
     return last_number
+
+
+
+def middle_point(list):
+    if len(list) < 1:
+        return sys.maxsize
+    return list[len(list)//2]
+# Funcion que le das una lista y te devuelve el punto medio

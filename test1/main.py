@@ -1,11 +1,11 @@
-from lists import generate_serie_7
+from lists import generate_serie_7, middle_point
 import sys
 
 
 
-# list1 = [5]
-# print(reverse_list(list1)) 
 
 
-posicion = generate_serie_7(0)
+posicion = generate_serie_7(-3)
 print(posicion)
+
+print(middle_point([1, 2, 3, 4, 5]))
