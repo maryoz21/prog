@@ -168,10 +168,15 @@ def fibonacci(n: int) -> int:
 
 
 
-print(fibonacci(4))
-
-
-
 # Funcion que le das un numero y imprime la tabla de multiplicar de ese numero 
-# sin uar listas ejemplo: 7 devuelve 7x1=7, 7x2=14, 7x3=21...7x10=70
+# sin uar listas ejemplo: 7 devuelve 7x1=7, 7x2=14, 7x3=21...7x10=70 Usando solo cosas que hemos dado, las que estan en el documento
+ 
+def tabla_multiplicar(n: int):
+    if n < 1:
+        return ""
+    result = ""
+    for i in range(1, 11):
+        result += f"{n}x{i}={n*i}\n"
+    return result
 
+print(tabla_multiplicar(7))
