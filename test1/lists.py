@@ -178,5 +178,3 @@ def tabla_multiplicar(n: int):
     for i in range(1, 11):
         result += f"{n}x{i}={n*i}\n"
     return result
-
-print(tabla_multiplicar(7))
