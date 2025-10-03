@@ -165,8 +165,8 @@ def include_numbers(lista: list[int | float], threshold: int | float, include_gr
                 result += f"{lista[i]} "
         
     return result
-lista = [10, 5, 7, -3]
-threshold = 0
-print(include_numbers(lista, threshold, True, True, False))
+# lista = [10, 5, 7, -3]
+# threshold = 0
+# print(include_numbers(lista, threshold, True, True, False))
 
-# Calular la mediana de una lista
+# Calular el valor mediano de una lista si te da 1, 2, 3, 4, 5: es 3
