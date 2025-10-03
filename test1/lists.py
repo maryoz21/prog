@@ -132,18 +132,41 @@ def generate_serie_7(n:int):
 
 # Le paso una lista y un numero limite. Funcion que cuente el numero de elementos que son mayores que el limite
 
-def greater(n, n2):
-    if n > n2:
-        return True
-    return False
 
 def ff(lista: list[int | float], threshold: int | float) -> int:
     result = 0
     for i in range(0, len(lista)):
-        if greater(lista[i], threshold):
+        if lista[i] > threshold:
             result += 1
     return result
 
+# lista = [10, 5, 7, -3]
+# threshold = -2
+# print(ff(lista, threshold))
+
+def include_numbers(lista: list[int | float], threshold: int | float, include_greaters: bool, include_equals: bool, include_lowers: bool) -> int:
+    result = ""
+    if include_greaters:
+        result += "Greaters:"
+        for i in range(len(lista)):
+            if lista[i] > threshold:
+                result += f"{lista[i]} "
+
+    if include_equals:
+        result += " Equals:"
+        for i in range(len(lista)):
+            if lista[i] == threshold:
+                result += f"{lista[i]} "
+
+    if include_lowers:
+        result += "Lowers:"
+        for i in range(len(lista)):
+            if lista[i] < threshold:
+                result += f"{lista[i]} "
+        
+    return result
 lista = [10, 5, 7, -3]
-threshold = -2
-print(ff(lista, threshold))
+threshold = 0
+print(include_numbers(lista, threshold, True, True, False))
+
+# Calular la mediana de una lista
