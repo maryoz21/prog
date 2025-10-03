@@ -1,5 +1,9 @@
 from lists import generate_serie_7, middle_point, tabla_multiplicar
+
 import sys
+
+
+
 
 
 
@@ -10,4 +14,4 @@ import sys
 
 # print(middle_point([1, 2, 3, 4, 14]))
 
-print(tabla_multiplicar(74))
+# print(tabla_multiplicar(74))
