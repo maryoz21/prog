@@ -144,6 +144,6 @@ def ff(lista: list[int | float], threshold: int | float) -> int:
             result += 1
     return result
 
-lista = [10, 5, 7, 9]
-threshold = 1
+lista = [10, 5, 7, -3]
+threshold = -2
 print(ff(lista, threshold))
