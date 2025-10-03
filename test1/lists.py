@@ -181,6 +181,8 @@ def tabla_multiplicar(n: int):
 
 # Productorio de un numero
 def productory(n: int):
+    if n < 0:
+        return sys.maxsize
     result = 1
     for i in range(1, n+1):
         result *= i
