@@ -178,3 +178,12 @@ def tabla_multiplicar(n: int):
     for i in range(1, 11):
         result += f"{n}x{i}={n*i}\n"
     return result
+
+# Productorio de un numero
+def productory(n: int):
+    result = 1
+    for i in range(1, n+1):
+        result *= i
+    return result
+
+print(productory(5))
