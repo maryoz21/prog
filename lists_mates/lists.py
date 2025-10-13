@@ -169,4 +169,4 @@ def include_numbers(lista: list[int | float], threshold: int | float, include_gr
 # threshold = 0
 # print(include_numbers(lista, threshold, True, True, False))
 
-# Calular el valor mediano de una lista si te da 1, 2, 3, 4, 5: es 3
+# Calular el valor mediano de una lista si te da 1, 2, 3, 4, 5: es 
