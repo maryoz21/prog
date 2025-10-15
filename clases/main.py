@@ -1,7 +1,7 @@
 from GameObject import GameObject
-from Typing import List
+from typing import List
 
-lista: List[GameObjetct] = []
+lista: List[GameObject] = []
 
 obj = GameObject()
 obj.id = 1
