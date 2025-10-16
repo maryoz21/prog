@@ -8,4 +8,4 @@ def get_object(name: str, lista: list[GameObject] ) -> GameObject :
             return obj
     return None
 
-print(get_object("Player1", [GameObject(1, "Player"), GameObject(2, "Enemy")]))
+print(get_object("Player", [GameObject(1, "Player"), GameObject(2, "Enemy")]))
