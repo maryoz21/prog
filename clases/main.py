@@ -1,11 +1,11 @@
 from GameObject import GameObject
 from typing import List
 
-lista: List[GameObject] = []
+#Funcion que le pasas un nombre y te devuelve el objeto con ese nombre
+def get_object(name: str, lista: list[GameObject] ) -> GameObject :
+    for obj in lista:
+        if obj.name == name:
+            return obj
+    return None
 
-obj = GameObject()
-obj.id = 1
-obj.name = "Ana"
-lista.append(obj)
-lista.append(obj)
-
+print(get_object("Player1", [GameObject(1, "Player"), GameObject(2, "Enemy")]))
