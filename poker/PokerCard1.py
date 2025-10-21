@@ -49,10 +49,3 @@ class PokerCard:
 
     def to_string(self) -> str:
         return f"{self.get_number()} {self.get_type_as_string()}"
-
-card1 = PokerCard(10, 2)
-
-print(card1.get_type())
-print(card1.type)
-
-print(card1.to_string())
