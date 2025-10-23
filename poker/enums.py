@@ -1,7 +1,7 @@
 from enum import Enum
 
 class CardSuit(Enum):
-    DIAMOND = 1
+    DIAMONDS = 1
     HEARTS = 2
     CLUBS = 3
     SPADES = 4

@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from enums import CardSuit, Color
+
 @dataclass
 class PokerCard:
-    number: int = -1
-    type: int = -1
+    number: int
+    type: CardSuit
 
     def set_number(self, number):
         if number is None:
@@ -40,11 +41,11 @@ class PokerCard:
             return "Spades"
         return ""
 
-        def get_color(self):
+    def get_color(self):
         if self.type == CardSuit.DIAMONDS or self.type == CardSuit.HEARTS:
             return Color.RED
         return Color.BLACK
 
 
     def to_string(self) -> str:
-        return f"{self.get_number()} {self.get_type_as_string()} {self.get_color()}"
+        return f"{self.get_number()} {self.get_type_as_string()} {self.get_color().name}"
