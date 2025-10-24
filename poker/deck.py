@@ -31,7 +31,4 @@ class Deck:
         if len(self.deck) > 0:
             index = len(self.deck)-1
             card = self.deck.pop(index)
-            return card
-        
-
-    
+            return card 
