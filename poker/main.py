@@ -3,7 +3,10 @@ from deck import Deck
 from enums import CardSuit, Color
 
 
-card1 = PokerCard2(10, CardSuit.HEARTS)
 
-
-print(card1.to_string())
+deck1 = Deck()
+deck1.create_deck()
+deck2 = Deck()
+deck2.create_deck()
+deck1.shuffle_deck()
+deck3 = Deck()
