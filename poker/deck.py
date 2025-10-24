@@ -27,8 +27,9 @@ class Deck:
             index = self.generate_random_number()
             self.move_card_to_last(index)
 
-    def deal_card(self):
+    def deal_card(self) -> PokerCard2:
         if len(self.deck) > 0:
             index = len(self.deck)-1
             card = self.deck.pop(index)
             return card 
+        return None
