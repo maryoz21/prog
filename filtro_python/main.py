@@ -1,3 +1,4 @@
+from unittest import result
 from wsgiref.handlers import CGIHandler
 
 from numpy import imag
@@ -92,7 +93,27 @@ def cambiar_a_blanco_o_negro(image, num):
     return result
 
 
+def min_of_neightbours(image: Image, pixel_x, pixel_y):
+    min_c = image.get_pixel(pixel_x, pixel_y)
+    for y in range(pixel_y - 1, pixel_y + 2):
+        for x in range(pixel_x - 1, pixel_x + 2):
+            if 0 < x < image.width and 0 < y < image.height:
+                neighbour_c = image.get_pixel(x, y)
+                min_c = min_color(min_c, neighbour_c)
+    return min_c
+
+
+def contraer(image: Image):
+    result = Image(image.width, image.height)
+    for y in range(1, image.height):
+        for x in range(1, image.width):
+            c = min_of_neightbours(image, x, y)
+            result.set_pixel(x, y, c)
+    return result
+
+
+
 img = Image()
-img.load_from("coche.tga")  # o .tga, .ppm, .png, .jpg
-res2 = cambiar_a_blanco_o_negro(img, 0.7)
-res2.save_to("salida.tga")  # guarda en formato texto PPM
+img.load_from("pastillas_binalizado.tga")  # o .tga, .ppm, .png, .jpg
+res2 = contraer(img)
+res2.save_to("pastillas_2.tga")  # guarda en formato texto PPM
