@@ -62,9 +62,37 @@ def get_negative(image: Image):
 
     return resultado
 
+def change_hue(image: Image):
+    resultado = image
+    for y in range(image.height):
+        for x in range(image.width):
+            c = image.get_pixel(x,y)
+            hsl: HSL = c.to_hsl()
+            hsl.h += 0.5
+            c = hsl.to_rgb()
+            resultado.set_pixel(x, y, c)
+    return resultado
+
+def cambiar_a_blanco_o_negro(image, num):
+    result: Image = Image(image.width, image.height)
+    for y in range (image.height):
+        for x in range(image.width):
+            c = image.get_pixel(x, y)
+
+            media = (c.r + c.b + c.g) / 3.0
+            if media > num:
+                c.r = 1.0
+                c.b = 1.0
+                c.g = 1.0
+            else: 
+                c.r = 0.0
+                c.b = 0.0
+                c.g = 0.0
+            result.set_pixel(x, y, c)
+    return result
 
 
 img = Image()
-img.load_from("celda.tga")  # o .tga, .ppm, .png, .jpg
-res2 = get_negative(img)
+img.load_from("coche.tga")  # o .tga, .ppm, .png, .jpg
+res2 = cambiar_a_blanco_o_negro(img, 0.7)
 res2.save_to("salida.tga")  # guarda en formato texto PPM
