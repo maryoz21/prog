@@ -1,3 +1,4 @@
+from turtle import width
 from unittest import result
 from wsgiref.handlers import CGIHandler
 
@@ -111,9 +112,41 @@ def contraer(image: Image):
             result.set_pixel(x, y, c)
     return result
 
+def contraer_x_veces(image, n):
+    result = image
+    contador = 0
+    while contador < n:
+        result = contraer(result)
+        contador += 1
+    return result
+        
+def max_of_neightbours(image: Image, pixel_x, pixel_y):
+    max_c = image.get_pixel(pixel_x, pixel_y)
+    for y in range(pixel_y - 1, pixel_y + 2):
+        for x in range(pixel_x - 1, pixel_x + 2):
+            if 0 < x < image.width and 0 < y < image.height:
+                neighbour_c = image.get_pixel(x, y)
+                max_c = max_color(max_c, neighbour_c)
+    return max_c
+
+def dilatar(image: Image):
+    result = Image(image.width, image.height)
+    for y in range(1, image.height):
+        for x in range(1, image.width):
+            c = max_of_neightbours(image, x, y)
+            result.set_pixel(x, y, c)
+    return result
+
+def dilatar_x_veces(image, n):
+    result = image
+    contador = 0
+    while contador < n:
+        result = dilatar(result)
+        contador += 1
+    return result
 
 
 img = Image()
 img.load_from("pastillas_binalizado.tga")  # o .tga, .ppm, .png, .jpg
-res2 = contraer(img)
-res2.save_to("pastillas_2.tga")  # guarda en formato texto PPM
+res2 = dilatar_x_veces(img, 15)
+res2.save_to("pastillas_3.tga")  # guarda en formato texto PPM
