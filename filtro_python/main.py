@@ -145,8 +145,38 @@ def dilatar_x_veces(image, n):
         contador += 1
     return result
 
+def media_of_neightbours(image, pixel_x, pixel_y):
+    lista = []
+    media_c = image.get_pixel(pixel_x, pixel_y)
+    for y in range(pixel_y - 1, pixel_y + 2):
+        for x in range(pixel_x - 1, pixel_x + 2):
+            if 0 < x < image.width and 0 < y < image.height:
+                c = image.get_pixel(x, y, c)
+                lista.append(c)
+    suma: Color = Color(0.0, 0.0, 0.0)
+    for indice, valor in enumerate(lista):
+        suma += valor
+    media = suma / 9
+    return media
+
+def kernel(image: Image, tupla):
+    pass
+    c = image.get_pixel
+
+
+
+
+
+
+tupla_num: tuple = (0.1, 0.3, 0.5)
+
+
+
+
+
 
 img = Image()
 img.load_from("pastillas_binalizado.tga")  # o .tga, .ppm, .png, .jpg
-res2 = dilatar_x_veces(img, 15)
+res2 = kernel(img, tupla_num)
 res2.save_to("pastillas_3.tga")  # guarda en formato texto PPM
+
