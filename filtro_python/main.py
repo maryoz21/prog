@@ -1,4 +1,4 @@
-from turtle import width
+from turtle import color, width
 from unittest import result
 from wsgiref.handlers import CGIHandler
 
@@ -145,38 +145,57 @@ def dilatar_x_veces(image, n):
         contador += 1
     return result
 
-def media_of_neightbours(image, pixel_x, pixel_y):
-    lista = []
-    media_c = image.get_pixel(pixel_x, pixel_y)
-    for y in range(pixel_y - 1, pixel_y + 2):
-        for x in range(pixel_x - 1, pixel_x + 2):
-            if 0 < x < image.width and 0 < y < image.height:
-                c = image.get_pixel(x, y, c)
-                lista.append(c)
+def calcular_media(colores: list[Color]) -> Color:
+    if len(colores) == 0:
+        return Color(0.0, 0.0, 0.0)
     suma: Color = Color(0.0, 0.0, 0.0)
-    for indice, valor in enumerate(lista):
+    for valor in colores:
         suma += valor
-    media = suma / 9
+    media = suma / len(colores)
+    media.a = 1.0
     return media
 
-def kernel(image: Image, tupla):
-    pass
-    c = image.get_pixel
+def is_inside_image(image, x, y) -> bool:
+    return 0 < x < image.width - 1 and 0 < y < image.height - 1
+
+def media_of_neightbours(image, pixel_x, pixel_y):
+    lista = []
+    for y in range(pixel_y - 1, pixel_y + 2):
+        for x in range(pixel_x - 1, pixel_x + 2):
+            if is_inside_image(image, x, y):
+                c = image.get_pixel(x, y)
+                lista.append(c)
+    return calcular_media(lista)
+
+def kernel_con_la_media(image: Image):
+    result = Image(image.width, image.height)
+    for y in range(image.height):
+        for x in range(image.width):
+            c = media_of_neightbours(image, x, y)
+            result.set_pixel(x, y, c)
+    return result
 
 
+def multiplicar_pixeles_por_x(image, num):
+    index = 0
+    for valor in lista_pix:
+        valor = valor * valores(index)
+    return lista_pix
 
-
-
-
-tupla_num: tuple = (0.1, 0.3, 0.5)
-
-
-
+def kernel_con_tupla(image: Image, valores: tuple):
+    result = Image(image.width, image.height)
+    lista_pix: list = []
+    for y in range(image.width):
+        for x in range(image.height):
+            c = image.get_pixel(x,y)
+            lista_pix.append(c)
+    
+            
 
 
 
 img = Image()
-img.load_from("pastillas_binalizado.tga")  # o .tga, .ppm, .png, .jpg
-res2 = kernel(img, tupla_num)
-res2.save_to("pastillas_3.tga")  # guarda en formato texto PPM
+img.load_from("coche.tga")  # o .tga, .ppm, .png, .jpg
+res2 = kernel_con_la_media(img, (1/9, 1/9, 1/9))
+res2.save_to("coche2.tga")  # guarda en formato texto PPM
 
