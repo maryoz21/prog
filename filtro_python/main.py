@@ -176,19 +176,24 @@ def kernel_con_la_media(image: Image):
     return result
 
 
-def multiplicar_pixeles_por_x(image, num):
-    index = 0
-    for valor in lista_pix:
-        valor = valor * valores(index)
-    return lista_pix
-
-def kernel_con_tupla(image: Image, valores: tuple):
+def convolution(image: Image, kernel: tuple):
     result = Image(image.width, image.height)
-    lista_pix: list = []
-    for y in range(image.width):
-        for x in range(image.height):
+    for y in range(1, image.height - 1):
+        for x in range(1, image.width - 1):
+            c = apply_kernel(image, x, y, kernel)
+            result.set_pixel(x, y, c)
+    return result
+
+def apply_kernel(image: Image,px_x, px_y, kernel: tuple):
+    index = 0
+    result = Color(0.0, 0.0, 0.0)
+    for y in range(px_y - 1, px_y + 2):
+        for x in range(px_x - 1, px_x + 2):
             c = image.get_pixel(x,y)
-            lista_pix.append(c)
+            result = result + c * kernel[index]
+            index += 1
+    result.a = 1.0
+    return result
     
             
 
@@ -196,6 +201,7 @@ def kernel_con_tupla(image: Image, valores: tuple):
 
 img = Image()
 img.load_from("coche.tga")  # o .tga, .ppm, .png, .jpg
-res2 = kernel_con_la_media(img, (1/9, 1/9, 1/9))
+res2 = convolution(img, (0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8))
+res2 = saturate(res2)
 res2.save_to("coche2.tga")  # guarda en formato texto PPM
 
