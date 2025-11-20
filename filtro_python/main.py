@@ -287,7 +287,7 @@ class Table2D:
         self.pintar_mancha(ancho - 1, alto, numero_mancha)
         self.pintar_mancha(ancho + 1, alto, numero_mancha)
 
-    def contar_tamaño_mancha(self, pixeles_minimo):
+    def contar_tamaño_manchas(self) -> list[int]:
         contador = 0
         for y in range(self._alto):
             for x in range(self._ancho):
@@ -302,7 +302,7 @@ class Table2D:
                     lista_manchas[valor] += 1
         return lista_manchas
     
-    def eliminar_mancha_pequeña(self, pixeles_minimo):
+    def eliminar_manchas_menores_a(self, pixeles_minimo) -> list[int]:
         contador = self.contar_tamaño_mancha(pixeles_minimo)
         for y in range(self._alto): 
             for x in range(self._ancho):
@@ -313,45 +313,26 @@ class Table2D:
 
                     if tamaño_mancha < pixeles_minimo:
                         self.set_cell(x, y, 0)
-        return contador
-        
-               
-
-        
-                    
-
-                    
-
+    
+    def get_lista_manchas_mayores_a(self, pixeles_minimos):
+        copia_lista = self.contar_tamaño_manchas(pixeles_minimos)
+        resultado = []
+        for tamaño in copia_lista:
+            if tamaño >= pixeles_minimos:
+                resultado.append(tamaño)
+        return resultado
 
                 
 
-    def guardar_como_tabla(self, nombre_archivo):
-        try:
-            with open(nombre_archivo, "w") as f:
-                # Recorremos cada FILA (eje Y)
-                for y in range(self._alto):
-                    lista_fila = []
-                    
-                    # Recorremos cada COLUMNA de esa fila (eje X)
-                    for x in range(self._ancho):
-                        valor = self.get_cell(x, y)
-                        lista_fila.append(str(valor))
-                    
-                    # Unimos los números con un espacio y escribimos la línea en el archivo
-                    # " ".join convierte ['0', '0', '4'] en "0 0 4"
-                    linea_texto = " ".join(lista_fila)
-                    f.write(linea_texto + "\n")
-                    
-            print(f"Tabla guardada correctamente en: {nombre_archivo}")
-            
-        except Exception as e:
-            print(f"Error al guardar la tabla: {e}")
 
-    
+
+        
+        
+
 
 img = Image()
 img.load_from("pastillas_binalizado.tga")  # o .tga, .ppm, .png, .jpg
 tabla: Table2D = Table2D(img.width, img.height)
 tabla.convert_image_to_table2d(img)
 tabla.encontrar_manchas()
-print(tabla.eliminar_mancha_pequeña(50))
+print(tabla.get_lista_manchas_mayores_a(50))
