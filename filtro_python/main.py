@@ -3,7 +3,7 @@ from turtle import color, width
 from unittest import result
 from wsgiref.handlers import CGIHandler
 sys.setrecursionlimit(500000)
-
+from Tabla2D import Table2D
 
 from image import *
 
@@ -198,160 +198,84 @@ def apply_kernel(image: Image,px_x, px_y, kernel: tuple):
     return result
     
 
-class Table2D:
-    def __init__(self, ancho: int = 0, alto: int = 0):
-        self._ancho = ancho
-        self._alto = alto
-        self._lista = [0] * (ancho * alto)
-    
-    def __str__(self):
-        rows = []
-        width = self._ancho
-        
-        for y in range(self._alto):
-            # 1. Calculamos dónde empieza y acaba la fila actual en la lista única
-            start = y * width
-            end = start + width
-            
-            # 2. Obtenemos el trozo de lista (slice) de esa fila
-            row_data = self._lista[start:end]
-            
-            # 3. Convertimos los números a texto y los unimos con espacios
-            # map(str, row_data) convierte [0, 1, 0] en ["0", "1", "0"] rápidamente
-            row_str = " ".join(map(str, row_data))
-            
-            rows.append(row_str)
-            
-        # 4. Unimos todas las filas con saltos de línea
-        return "\n".join(rows)
-    
-    def get_ancho(self) -> int:
-        return self._ancho
-    
-    def get_alto(self) -> int:
-        return self._alto
-    
-    def get_lista(self) -> list[int]:
-        return self._lista.copy
-
-    def get_cell(self, x, y) -> int:
-        index = y * self._ancho + x
-        return self._lista[index]
-    
-    def set_cell(self, x, y, value):
-        index = y * self._ancho + x
-        self._lista[index] = value
-
-    def set_ancho(self, ancho):
-        self._ancho = ancho
-
-    def set_alto(self, alto):
-        self._alto = alto
-
-    def convert_image_to_table2d(self, image: Image,):
-        self._ancho = image.width
-        self._alto = image.height
-        for y in range(image.height):
-            for x in range( image.width): 
-                index = y * self._ancho + x
-                c = image.get_pixel(x, y)
-                if c.r < 0.5: 
-                    self._lista[index] = 0
-                else: 
-                    self._lista[index] = 1
 
 
-    def encontrar_manchas(self):
-        contador = 2
-        for alto in range(self._alto):
-            for ancho in range(self._ancho):
-                if self.get_cell(ancho, alto) == 1:
-                    self.pintar_mancha(ancho, alto, contador)
-                    contador += 1
 
-    def pintar_mancha(self, ancho, alto, numero_mancha):
-        if alto < 0:
-            return
-        if alto >= self._alto:
-            return
-        if ancho < 0:
-            return
-        if ancho >= self._ancho:
-            return
-        if self.get_cell(ancho, alto) != 1:
-            return
-        self.set_cell(ancho, alto, numero_mancha)
 
-        self.pintar_mancha(ancho, alto - 1, numero_mancha)
-        self.pintar_mancha(ancho, alto + 1, numero_mancha)
-        self.pintar_mancha(ancho - 1, alto, numero_mancha)
-        self.pintar_mancha(ancho + 1, alto, numero_mancha)
 
-    def contar_tamaño_mancha(self, pixeles_minimo):
-        contador = 0
-        for y in range(self._alto):
-            for x in range(self._ancho):
-                valor = self.get_cell(x, y)
-                if valor > contador:
-                    contador = valor
-        lista_manchas = [0] * (contador + 1)
-        for y in range(self._alto):
-            for x in range(self._ancho):
-                valor = self.get_cell(x, y)
-                if valor > 1:
-                    lista_manchas[valor] += 1
-        return lista_manchas
-    
-    def eliminar_mancha_pequeña(self, pixeles_minimo):
-        contador = self.contar_tamaño_mancha(pixeles_minimo)
-        for y in range(self._alto): 
-            for x in range(self._ancho):
-                valor = self.get_cell(x, y)
-                if valor > 1:
-                    if valor < len(contador):
-                        tamaño_mancha = contador[valor]
+def convert_image_to_table2d(tabla: Table2D, image: Image,):
+    tabla.set_ancho(image.width) 
+    tabla.set_alto(image.height)
+    for y in range(image.height):
+        for x in range( image.width): 
+            c = image.get_pixel(x, y)
+            if c.r < 0.5: 
+                tabla.set_cell(x, y, 0) 
+            else: 
+                tabla.set_cell(x, y, 1) 
 
+
+def contar_manchas(tabla: Table2D):
+    contador = 2
+    for alto in range(tabla.get_alto()):
+        for ancho in range(tabla.get_ancho()):
+            if tabla.get_cell(ancho, alto) == 1:
+                pintar_mancha(tabla, ancho, alto, contador)
+                contador += 1
+    return contador
+
+def get_num_of_blobs(tabla: Table2D):
+    return contar_manchas(tabla) - 2
+
+def pintar_mancha(tabla: Table2D, ancho, alto, numero_mancha):
+    if alto < 0:
+        return
+    if alto >= tabla.get_alto():
+        return
+    if ancho < 0:
+        return
+    if ancho >= tabla.get_ancho():
+        return
+    if tabla.get_cell(ancho, alto) != 1:
+        return
+    tabla.set_cell(ancho, alto, numero_mancha)
+
+    pintar_mancha(tabla, ancho, alto - 1, numero_mancha)
+    pintar_mancha(tabla, ancho, alto + 1, numero_mancha)
+    pintar_mancha(tabla, ancho - 1, alto, numero_mancha)
+    pintar_mancha(tabla, ancho + 1, alto, numero_mancha)
+
+def contar_tamaño_mancha(tabla: Table2D, pixeles_minimo):
+    contador = 0
+    for y in range(tabla.get_alto()):
+        for x in range(tabla.get_ancho()):
+            valor = tabla.get_cell(x, y)
+            if valor > contador:
+                contador = valor
+    lista_manchas = [0] * (contador + 1)
+    for y in range(tabla.get_alto()):
+        for x in range(tabla.get_ancho()):
+            valor = tabla.get_cell(x, y)
+            if valor > 1:
+                lista_manchas[valor] += 1
+    return lista_manchas
+
+def eliminar_mancha_pequeña(tabla: Table2D, pixeles_minimo):
+    contador = contar_tamaño_mancha(tabla, pixeles_minimo)
+    for y in range(tabla.get_alto()): 
+        for x in range(tabla.get_ancho()):
+            valor = tabla.get_cell(x, y)
+            if valor > 1:
+                if valor < len(contador):
+                    tamaño_mancha = contador[valor]
                     if tamaño_mancha < pixeles_minimo:
-                        self.set_cell(x, y, 0)
-        return contador
-        
-               
-
-        
-                    
-
-                    
+                        tabla.set_cell(x, y, 0)
+    return contador
 
 
-                
-
-    def guardar_como_tabla(self, nombre_archivo):
-        try:
-            with open(nombre_archivo, "w") as f:
-                # Recorremos cada FILA (eje Y)
-                for y in range(self._alto):
-                    lista_fila = []
-                    
-                    # Recorremos cada COLUMNA de esa fila (eje X)
-                    for x in range(self._ancho):
-                        valor = self.get_cell(x, y)
-                        lista_fila.append(str(valor))
-                    
-                    # Unimos los números con un espacio y escribimos la línea en el archivo
-                    # " ".join convierte ['0', '0', '4'] en "0 0 4"
-                    linea_texto = " ".join(lista_fila)
-                    f.write(linea_texto + "\n")
-                    
-            print(f"Tabla guardada correctamente en: {nombre_archivo}")
-            
-        except Exception as e:
-            print(f"Error al guardar la tabla: {e}")
-
-    
-
+       
 img = Image()
-img.load_from("pastillas_binalizado.tga")  # o .tga, .ppm, .png, .jpg
+img.load_from("pastillas_binalizado_pequeña.tga")  # o .tga, .ppm, .png, .jpg
 tabla: Table2D = Table2D(img.width, img.height)
-tabla.convert_image_to_table2d(img)
-tabla.encontrar_manchas()
-print(tabla.eliminar_mancha_pequeña(50))
+convert_image_to_table2d(tabla, img)
+print(get_num_of_blobs(tabla))
