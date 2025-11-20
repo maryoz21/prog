@@ -303,7 +303,7 @@ class Table2D:
         return lista_manchas
     
     def eliminar_manchas_menores_a(self, pixeles_minimo) -> list[int]:
-        contador = self.contar_tamaño_mancha(pixeles_minimo)
+        contador = self.contar_tamaño_manchas()
         for y in range(self._alto): 
             for x in range(self._ancho):
                 valor = self.get_cell(x, y)
@@ -315,19 +315,12 @@ class Table2D:
                         self.set_cell(x, y, 0)
     
     def get_lista_manchas_mayores_a(self, pixeles_minimos):
-        copia_lista = self.contar_tamaño_manchas(pixeles_minimos)
+        copia_lista = self.contar_tamaño_manchas()
         resultado = []
         for tamaño in copia_lista:
             if tamaño >= pixeles_minimos:
                 resultado.append(tamaño)
         return resultado
-
-                
-
-
-
-        
-        
 
 
 img = Image()
