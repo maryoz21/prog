@@ -1,10 +1,11 @@
+import sys
 from turtle import color, width
 from unittest import result
 from wsgiref.handlers import CGIHandler
+sys.setrecursionlimit(500000)
 
 
 from image import *
-
 
 
 class Table2D:
@@ -24,11 +25,11 @@ class Table2D:
 
     def get_cell(self, x, y) -> int:
         index = y * self._ancho + x
-        return self._lista[index]
-    
+        return self._lista[index] 
+
     def get_cell_by_index(self, index) -> int:
         return self._lista[index]
-    
+
     def set_cell(self, x, y, value):
         index = y * self._ancho + x
         self._lista[index] = value

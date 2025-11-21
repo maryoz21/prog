@@ -203,6 +203,7 @@ def apply_kernel(image: Image,px_x, px_y, kernel: tuple):
 
 
 
+
 def convert_image_to_table2d(tabla: Table2D, image: Image,):
     tabla.set_ancho(image.width) 
     tabla.set_alto(image.height)
@@ -213,6 +214,30 @@ def convert_image_to_table2d(tabla: Table2D, image: Image,):
                 tabla.set_cell(x, y, 0) 
             else: 
                 tabla.set_cell(x, y, 1) 
+
+def contar_tamaño_manchas(tabla: Table2D) -> list[int]:
+    contador = 0
+    for y in range(tabla.get_alto()):
+        for x in range(tabla.get_ancho()):
+            valor = tabla.get_cell(x, y)
+            if valor > contador:
+                contador = valor
+    lista_manchas = [0] * (contador + 1)
+    for y in range(tabla.get_alto()):
+        for x in range(tabla.get_ancho()):
+            valor = tabla.get_cell(x, y)
+            if valor > 1:
+                lista_manchas[valor] += 1
+    return lista_manchas
+
+def eliminar_manchas_menores_a(tabla: Table2D, pixeles_minimo) -> list[int]:
+    contador = contar_tamaño_manchas(tabla)
+    for y in range(tabla.get_alto()): 
+        for x in range(tabla.get_ancho()):
+            valor = tabla.get_cell(x, y)
+            if valor > 1:
+                if valor < len(contador):
+                    tamaño_mancha = contador[valor]
 
 
 def contar_manchas(tabla: Table2D):
@@ -272,10 +297,15 @@ def eliminar_mancha_pequeña(tabla: Table2D, pixeles_minimo):
                         tabla.set_cell(x, y, 0)
     return contador
 
+def get_dictionary(tabla: Table2D):
+    for y in range(tabla.get_alto()):
+        for x in range(tabla.get_ancho()):
 
        
+
 img = Image()
 img.load_from("pastillas_binalizado_pequeña.tga")  # o .tga, .ppm, .png, .jpg
 tabla: Table2D = Table2D(img.width, img.height)
 convert_image_to_table2d(tabla, img)
 print(get_num_of_blobs(tabla))
+
