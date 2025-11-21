@@ -191,8 +191,9 @@ def apply_kernel(image: Image,px_x, px_y, kernel: tuple):
     result = Color(0.0, 0.0, 0.0)
     for y in range(px_y - 1, px_y + 2):
         for x in range(px_x - 1, px_x + 2):
-            c = image.get_pixel(x,y)
-            result = result + c * kernel[index]
+            if 0 <= x < image.width and 0 <= y < image.height:
+                c = image.get_pixel(x,y)
+                result = result + c * kernel[index]
             index += 1
     result.a = 1.0
     return result
