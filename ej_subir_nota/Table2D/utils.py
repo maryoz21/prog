@@ -79,7 +79,7 @@ def dilatar_x_veces(image, n):
 def convert_image_to_table2d(table: Table2D, image: Image,):
     table.set_ancho(image.width) 
     table.set_alto(image.height)
-    table.set_list(image.width * image.height)
+    table.set_lista(image.width * image.height)
     for y in range(image.height):
         for x in range( image.width): 
             c = image.get_pixel(x, y)
