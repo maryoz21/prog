@@ -1,11 +1,7 @@
-import sys
 from turtle import color, width
 from unittest import result
 from wsgiref.handlers import CGIHandler
-sys.setrecursionlimit(500000)
 
-
-from image import *
 
 
 class Table2D:

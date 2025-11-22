@@ -18,7 +18,7 @@ class Table2D:
         return self._alto
     
     def get_lista(self) -> list[int]:
-        return self._lista.copy
+        return self._lista.copy()
 
     def get_cell(self, x, y) -> int:
         index = y * self._ancho + x
