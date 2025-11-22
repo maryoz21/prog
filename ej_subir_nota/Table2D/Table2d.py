@@ -11,7 +11,7 @@ class Table2D:
         return self.__alto
 
     def get_cell(self, x, y) -> int:
-        index = y * self._ancho + x
+        index = y * self.__ancho + x
         return self.__lista[index] 
 
     def get_cell_by_index(self, index) -> int:
@@ -19,7 +19,7 @@ class Table2D:
 
     def set_cell(self, x, y, value):
         index = y * self.__ancho + x
-        self._lista[index] = value
+        self.__lista[index] = value
 
     def set_ancho(self, ancho):
         self.__ancho = ancho
