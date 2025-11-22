@@ -1,19 +1,9 @@
-from turtle import color, width
-from unittest import result
-from wsgiref.handlers import CGIHandler
 from Table2D import Table2D
 from image import Image
-from codec import *
 from utils import *
 import sys
 
 sys.setrecursionlimit(20000) 
-
-# img = Image()
-# img.load_from("pastillas.tga")  # o .tga, .ppm, .png, .jpg
-# img.cambiar_a_blanco_o_negro
-# tabla: Table2D = Table2D(img.width, img.height)
-# convert_image_to_table2d(tabla, img)
 
 
 img = Image()

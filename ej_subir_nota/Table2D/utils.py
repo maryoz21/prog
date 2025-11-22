@@ -1,9 +1,5 @@
-from turtle import color, width
-from unittest import result
-from wsgiref.handlers import CGIHandler
 from Table2D import Table2D
 from image import *
-from codec import *
 
 def cambiar_a_blanco_o_negro(image, num):
     result: Image = Image(image.width, image.height)
