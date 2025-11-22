@@ -1,10 +1,3 @@
-from turtle import color, width
-from unittest import result
-from wsgiref.handlers import CGIHandler
-from Table2D import Table2D
-from image import *
-from codec import *
-
 class Table2D:
     def __init__(self, ancho: int = 0, alto: int = 0):
         self._ancho = ancho
@@ -16,9 +9,6 @@ class Table2D:
     
     def get_alto(self) -> int:
         return self._alto
-    
-    def get_lista(self) -> list[int]:
-        return self._lista.copy()
 
     def get_cell(self, x, y) -> int:
         index = y * self._ancho + x

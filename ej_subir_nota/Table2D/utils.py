@@ -76,80 +76,142 @@ def dilatar_x_veces(image, n):
     return result
 
 
-def convert_image_to_table2d(tabla: Table2D, image: Image,):
-    tabla.set_ancho(image.width) 
-    tabla.set_alto(image.height)
+def convert_image_to_table2d(table: Table2D, image: Image,):
+    table.set_ancho(image.width) 
+    table.set_alto(image.height)
     for y in range(image.height):
         for x in range( image.width): 
             c = image.get_pixel(x, y)
             if c.r < 0.5: 
-                tabla.set_cell(x, y, 0) 
+                table.set_cell(x, y, 0) 
             else: 
-                tabla.set_cell(x, y, 1) 
+                table.set_cell(x, y, 1) 
                 
-def identificar_blobs(tabla: Table2D):
-    contador = 2
-    for alto in range(tabla.get_alto()):
-        for ancho in range(tabla.get_ancho()):
-            if tabla.get_cell(ancho, alto) == 1:
-                pintar_manchas_vecinas(tabla, ancho, alto, contador)
-                contador += 1
-    return contador
+def get_number_of_blobs(table: Table2D):
+    num_of_blobs = identificar_blobs(table)
+    return num_of_blobs - 2
 
-def contar_tamaño_manchas(tabla: Table2D):
-    contador = identificar_blobs(tabla)
+
+
+def contar_tamaño_manchas(table: Table2D):
+    contador = identificar_blobs(table)
     lista_manchas = [0] * (contador + 1)
-    for y in range(tabla.get_alto()):
-        for x in range(tabla.get_ancho()):
-            valor = tabla.get_cell(x, y)
+    for y in range(table.get_alto()):
+        for x in range(table.get_ancho()):
+            valor = table.get_cell(x, y)
             if valor > 1:
                 lista_manchas[valor] += 1
     return lista_manchas
 
-def pintar_manchas_vecinas(tabla: Table2D, ancho, alto, numero_mancha):
+def identificar_blobs(table: Table2D):
+    contador = 2
+    for alto in range(table.get_alto()):
+        for ancho in range(table.get_ancho()):
+            if table.get_cell(ancho, alto) == 1:
+                pintar_manchas_vecinas(table, ancho, alto, contador)
+                contador += 1
+    return contador
+
+def pintar_manchas_vecinas(table: Table2D, ancho, alto, numero_mancha):
     if alto < 0:
         return
-    if alto >= tabla.get_alto():
+    if alto >= table.get_alto():
         return
     if ancho < 0:
         return
-    if ancho >= tabla.get_ancho():
+    if ancho >= table.get_ancho():
         return
-    if tabla.get_cell(ancho, alto) != 1:
+    if table.get_cell(ancho, alto) != 1:
         return
-    tabla.set_cell(ancho, alto, numero_mancha)
+    table.set_cell(ancho, alto, numero_mancha)
 
-    pintar_manchas_vecinas(tabla, ancho, alto - 1, numero_mancha)
-    pintar_manchas_vecinas(tabla, ancho, alto + 1, numero_mancha)
-    pintar_manchas_vecinas(tabla, ancho - 1, alto, numero_mancha)
-    pintar_manchas_vecinas(tabla, ancho + 1, alto, numero_mancha)
+    pintar_manchas_vecinas(table, ancho, alto - 1, numero_mancha)
+    pintar_manchas_vecinas(table, ancho, alto + 1, numero_mancha)
+    pintar_manchas_vecinas(table, ancho - 1, alto, numero_mancha)
+    pintar_manchas_vecinas(table, ancho + 1, alto, numero_mancha)
 
-
-
-
-def eliminar_manchas_menores_a(tabla: Table2D, pixeles_minimo):
-    contador = contar_tamaño_manchas(tabla)
-    for y in range(tabla.get_alto()): 
-        for x in range(tabla.get_ancho()):
-            valor = tabla.get_cell(x, y)
-            if valor > 1:
-                if valor < len(contador):
-                    tamaño_mancha = contador[valor]
-                    if tamaño_mancha < pixeles_minimo:
-                        tabla.set_cell(x, y, 0)
-    return contador
-
+def get_max_id(table: Table2D):
+    max_id = 0
+    for y in range(table.get_alto()):
+        for x in range(table.get_ancho()):
+            valor = table.get_cell(x, y)
+            if valor > max_id:
+                max_id = valor
+    return max_id
 
 class BlobStats:
-    def __init__(self, id: int, pixel_count: int, x_min: int, x_max: int, y_min: int, y_max: int, table: Table2D):
+    def __init__(self, id: int, pixel_count: int = 0, x_min: int = -1, x_max: int = -1, y_min: int = -1, y_max: int = -1):
         self.id = id
         self.pixel_count = pixel_count
         self.x_min = x_min
         self.x_max = x_max
         self.y_min = y_min
         self.y_max = y_max
-        self.table = table
+
+    def get_ancho(self) -> int:
+        if self.x_min == -1:
+            return 0
+        return self.x_max - self.x_min + 1
+    
+    def get_alto(self) -> int:
+        if self.y_min == -1:
+            return 0
+        return self.y_max - self.y_min + 1
+
+    def add_pixel(self, x, y):
+        self.pixel_count += 1
+        if self.x_min == -1:
+            self.x_min = x
+            self.y_min = y
+            self.x_max = x
+            self.y_max = y
+        else:
+            if x < self.x_min:
+                self.x_min = x
+            if y < self.y_min:
+                self.y_min = y
+            if x > self.x_max:
+                self.x_max = x
+            if y > self.y_max:
+                self.y_max = y
 
     def get_bounding_boxes(table: Table2D):
-        valor_max = identificar_blobs(table: Table2D)
-        blobs = []
+        max_id = get_max_id(table)
+
+        if max_id < 2:
+            return []
+        lista_blobs = [None] * (max_id + 1)
+        for y in range(table.get_alto()):
+            for x in range(table.get_ancho()):
+                blob_id = table.get_cell(x, y)
+                if blob_id > 1:
+                    if lista_blobs[blob_id] is None:
+                        lista_blobs[blob_id] = BlobStats(blob_id)
+                    blob = lista_blobs[blob_id]
+                    blob.add_pixel(x,y)
+        result = []
+        for blob in lista_blobs:
+            if blob is not None:
+                result.append(blob)
+        return result
+
+        
+
+    def filtrar_por_pixeles(lista_blobs, min_pixels, max_pixels):
+        result = []
+        for blob in lista_blobs:
+            if blob is not None:
+                if min_pixels <= blob.pixel_count <= max_pixels:
+                    result.append(blob)
+        return result
+    
+    def filtrar_por_dimensiones(lista_blobs, min_ancho, max_ancho, min_alto, max_alto):
+        result = []
+        for blob in lista_blobs:
+            if blob is not None:
+                ancho = blob.get_ancho()
+                alto = blob.get_alto()
+                if min_ancho <= ancho <= max_ancho:
+                   if min_alto <= alto <= max_ancho:
+                       result.append(blob)
+        return result
