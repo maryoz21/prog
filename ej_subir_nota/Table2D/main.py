@@ -3,7 +3,7 @@ from image import Image
 from utils import *
 import sys
 
-sys.setrecursionlimit(20000) 
+sys.setrecursionlimit(500000) 
 
 
 img = Image()

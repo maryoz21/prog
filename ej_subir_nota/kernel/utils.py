@@ -1,7 +1,7 @@
 from image import *
 
 def saturate_image(image: Image):
-    result = image
+    result = Image(image.width, image.height)
     for y in range(image.height):
         for x in range(image.width):
             c = image.get_pixel(x,y)
