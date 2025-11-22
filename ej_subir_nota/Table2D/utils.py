@@ -88,12 +88,6 @@ def convert_image_to_table2d(table: Table2D, image: Image,):
             else: 
                 table.set_cell(x, y, 1) 
                 
-def get_number_of_blobs(table: Table2D):
-    num_of_blobs = identificar_blobs(table)
-    return num_of_blobs - 2
-
-
-
 def contar_tamaño_manchas(table: Table2D):
     contador = identificar_blobs(table)
     lista_manchas = [0] * (contador + 1)
@@ -213,6 +207,6 @@ class BlobStats:
                 ancho = blob.get_ancho()
                 alto = blob.get_alto()
                 if min_ancho <= ancho <= max_ancho:
-                   if min_alto <= alto <= max_ancho:
+                   if min_alto <= alto <= max_alto:
                        result.append(blob)
         return result
