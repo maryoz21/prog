@@ -13,7 +13,7 @@ img_binarizada = cambiar_a_blanco_o_negro(img, 0.5)
 
 img_contraida = contraer_x_veces(img_binarizada, 10)
 img_dilatada = dilatar_x_veces(img_contraida, 5)
-
+img_dilatada.save_to("pastillas_dil.tga")
 
 tabla = Table2D(img_dilatada.width, img_dilatada.height)
 
