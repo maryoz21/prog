@@ -1,8 +1,8 @@
 from datetime import date
-from UsersService import User, UsersFilter
-from UserServiceImpl import UsersServiceImpl
+from UsersService import *
+from UserServiceImpl import *
 
-service = UsersServiceImpl()
+service: UsersService = UsersServiceImpl()
 
 u1 = User(name="Pepe", birth_date=date(1990, 1, 1))
 id1 = service.create_user(u1)
