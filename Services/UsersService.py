@@ -8,6 +8,11 @@ class User:
     name: str = ""
     birth_date: date = date.today()
 
+@dataclass(slots=True)
+class UsersFilter:
+    match_pattern: str = None
+    min_age: int = 0
+
 
 class UsersService(ABC):
     @abstractmethod
@@ -27,5 +32,5 @@ class UsersService(ABC):
         pass
 
     @abstractmethod
-    def list_users(self, filter: UsersFilter, limit, offset) -> list[User]:
+    def list_users(self, filter: UsersFilter, offset, limit) -> list[User]:
         pass
