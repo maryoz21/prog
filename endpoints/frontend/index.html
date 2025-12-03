@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hola mundo</h1>
+    <p>Esta es mi primera pagina HTML</p>
+
+    <input type="text" id="nombre" placeholder="Escribe tu nombre">
+    <button onclick="saludar()">Saludar</button>
+
+    <p id="resultado"></p>
+
+    <script>
+    async function saludar() {
+        const nombre = document.getElementById("nombre").value;
+
+        const response = await fetch(`http://127.0.0.1:8000/saludo/${nombre}`);
+        const data = await response.json();
+
+        document.getElementById("resultado").innerText = data.saludo;
+
+        // Si fetch falla, se verá un error en la consola
+        // y podrás poner un breakpoint ahí.
+    }
+    </script>
+
+
+</body>
+</html>
