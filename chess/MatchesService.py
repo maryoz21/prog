@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import *
 from match import Match
-from pieces import *
+from pieces import Pieces, Color
 
 class MatchesService:
     def __init__(self):
