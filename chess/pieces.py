@@ -35,7 +35,7 @@ class Piece(ABC):
 
     def can_i_move(self, x, y, board):
         if board.is_in_bounds(x,y):
-            posible_moves = self.movimientos_posibles()
+            posible_moves = self.movimientos_posibles(board)
             for move in posible_moves:
                 mov_x, mov_y = move
                 if mov_x == x and mov_y == y:
@@ -125,16 +125,16 @@ class Rook(Piece):
             x_actual = self.get_x() + dx
             y_actual = self.get_y() + dy
 
-        while board.is_in_bounds(x_actual, y_actual):
-            piece_at_square = board.get_piece_at(x_actual, y_actual)
-            if piece_at_square is None: 
-                movement_list.append((x_actual, y_actual))
-            else:
-                if piece_at_square.get_color() != self.get_color():
+            while board.is_in_bounds(x_actual, y_actual):
+                piece_at_square = board.get_piece_at(x_actual, y_actual)
+                if piece_at_square is None: 
                     movement_list.append((x_actual, y_actual))
+                else:
+                    if piece_at_square.get_color() != self.get_color():
+                        movement_list.append((x_actual, y_actual))
                     break
-            x_actual += dx
-            y_actual += dy
+                x_actual += dx
+                y_actual += dy
 
         return movement_list
 
@@ -151,7 +151,26 @@ class Bishop(Piece):
         super().__init__(color, x, y, PieceType.BISHOP)
     
     def movimientos_posibles(self, board):
-        return super().movimientos_posibles(board)
+        movement_list = []
+
+        directions = [(1,1), (1, -1), (-1, 1), (-1, -1)]
+
+        for dx, dy in directions:
+            x_actual = self.get_x() + dx
+            y_actual = self.get_y() + dy
+
+            while board.is_in_bounds(x_actual, y_actual):
+                piece_at_square = board.get_piece_at(x_actual, y_actual)
+                if piece_at_square is None: 
+                    movement_list.append((x_actual, y_actual))
+                else:
+                    if piece_at_square.get_color() != self.get_color():
+                        movement_list.append((x_actual, y_actual))
+                    break
+                x_actual += dx
+                y_actual += dy
+
+        return movement_list
     
 
 class Queen(Piece):
@@ -159,14 +178,50 @@ class Queen(Piece):
         super().__init__(color, x, y, PieceType.QUEEN)
     
     def movimientos_posibles(self, board):
-        return super().movimientos_posibles(board)
+        movement_list = []
+
+        directions = [(1, 0), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, 0), (0, -1), (-1, -1)]
+
+        for dx, dy in directions:
+            x_actual = self.get_x() + dx
+            y_actual = self.get_y() + dy
+
+            while board.is_in_bounds(x_actual, y_actual):
+                piece_at_square = board.get_piece_at(x_actual, y_actual)
+                if piece_at_square is None: 
+                    movement_list.append((x_actual, y_actual))
+                else:
+                    if piece_at_square.get_color() != self.get_color():
+                        movement_list.append((x_actual, y_actual))
+                    break
+                x_actual += dx
+                y_actual += dy
+
+        return movement_list
     
 class King(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.KING)
     
     def movimientos_posibles(self, board):
-        return super().movimientos_posibles(board)
+        movement_list = []
+
+        directions = [(1, 0), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, 0), (0, -1), (-1, -1)]
+
+        for dx, dy in directions:
+            x_target = self.get_x() + dx
+            y_target = self.get_y() + dy
+
+            if board.is_in_bounds(x_target, y_target):
+                piece_at_square = board.get_piece_at(x_target, y_target)
+                
+                if piece_at_square is None: 
+                    movement_list.append((x_target, y_target))
+
+                elif piece_at_square.get_color() != self.get_color():
+                        movement_list.append((x_target, y_target))
+
+        return movement_list
     
     def enroque(self):
         pass
