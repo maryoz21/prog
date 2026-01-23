@@ -1,13 +1,12 @@
 from __future__ import annotations
 from typing import *
 from abc import ABC, abstractmethod
-from MatchesService import *
 from pieces import *
 from board import Board
 
 class BoardImpl(Board):
     def __init__(self):
-        self.__pieces = dict[tuple[int, int], Piece]
+        self.__pieces: dict[tuple[int, int], Piece] = {}
         self.__size: int = 8
 
     
@@ -47,9 +46,6 @@ class BoardImpl(Board):
         y = piece.get_y()
 
         self.__pieces.pop((x, y), None)
-        
-        
-
 
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
         piece = self.__pieces.get((from_x, from_y))
@@ -64,5 +60,14 @@ class BoardImpl(Board):
 
             return True
         return False
+
+    def is_check(self, color: Color) -> bool:
+        pass
+
+    def is_checkmate(self, color: Color) -> bool:
+        pass
+
+    def is_stalemate(self, color: Color) -> bool:
+        pass
 
     

@@ -17,17 +17,11 @@ class Match:
     def get_match_id(self) -> int:
         return self.__id
 
-    def is_check(self, color: Color) -> bool:
-        pass
-
-    def is_checkmate(self, color: Color) -> bool:
-        pass
-
-    def is_stalemate(self, color: Color) -> bool:
-        pass
+    
 
     def switch_turn(self):
         if self.turn == Color.WHITE:
-            self.turn == Color.BLACK
-        self.turn == Color.WHITE
+            self.turn = Color.BLACK
+        else:
+            self.turn = Color.WHITE
 

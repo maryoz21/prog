@@ -1,11 +1,11 @@
 from __future__ import annotations
 from typing import *
 from match import Match
-from pieces import Pieces, Color
+from pieces import Piece, Color
 
 class MatchesService:
     def __init__(self):
-        self.matches: list[Match]
+        self.matches: list[Match] = []
     
     def move(self, match_id: int, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
         pass

@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import *
 from abc import ABC, abstractmethod
 from enum import Enum
-from MatchesService import *
 from board import Board
 
 class Color(Enum):
@@ -39,7 +38,7 @@ class Piece(ABC):
     def get_y(self):
         return self.__y
 
-    def can_i_move(self, x, y, board):
+    def can_i_move(self, x: int, y: int, board: Board):
         if board.is_in_bounds(x,y):
             posible_moves = self.movimientos_posibles(board)
             for move in posible_moves:
