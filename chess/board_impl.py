@@ -19,8 +19,8 @@ class BoardImpl(Board):
     def get_size(self):
         return super().get_size()
     
-    def is_in_bounds(self, x, y):
-        return super().is_in_bounds(x, y)
+    def is_in_bounds(self, x: int, y: int):
+        
     
     # Preguntar a Iker
     def visit_squares(self):
