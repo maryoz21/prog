@@ -34,5 +34,5 @@ class Queue(Generic[T]):
         result = Queue[T]()
         for element in self.__list:
             if f(element):
-                self.__list.enqueue(element)
+                result.enqueue(element)
         return result

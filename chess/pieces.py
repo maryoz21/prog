@@ -27,9 +27,15 @@ class Piece(ABC):
     def get_color(self):
         return self.__color
     
+    def set_x(self, x: int):
+        self.__x = x
+
     def get_x(self):
         return self.__x
     
+    def set_y(self, y: int):
+        self.__y = y
+
     def get_y(self):
         return self.__y
 
@@ -41,6 +47,8 @@ class Piece(ABC):
                 if mov_x == x and mov_y == y:
                     return True
         return False    
+    
+
 
     @abstractmethod
     def movimientos_posibles(self, board: Board) -> list[tuple[int, int]]:
@@ -72,7 +80,7 @@ class Pawn(Piece):
                 return True
         return False  
 
-    def movimientos_posibles(self, board) -> list[tuple[int, int]]:
+    def movimientos_posibles(self, board: Board) -> list[tuple[int, int]]:
         movement_list =[]
         x = self.get_x()
         y = self.get_y()
