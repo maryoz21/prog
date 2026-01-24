@@ -6,6 +6,7 @@ V = TypeVar("V")
 
 class ExDictionary(Generic[K, V]):
     def __init__(self):
+        super.__init__()
         self.__items: list[tuple[K, V]] = []
 
     def get_count(self) -> int:
