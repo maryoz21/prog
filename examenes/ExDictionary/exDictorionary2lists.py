@@ -32,7 +32,6 @@ class ExDictionary(Generic[K, V]):
     def set(self, key: K, value: V):
         if len(self.__keys) <= 0:
             return
-        index = 0
         if self.contains_key(key):
             for i in range(len(self.__keys)):
                 if self.__keys[i] == key:

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import *
 
 T = TypeVar("T")
@@ -89,8 +90,66 @@ class ExList(Generic[T]):
             self.__list[index] = element
             self.__count += 1
 
-
+    def indexOf(self, element: T) -> int:
+        for i in range(self.__count):
+            if self.__list[i] == element:
+                return i
+        return -1
     
+    def contains(self, element: T) -> bool:
+        return self.indexOf(element) != -1
+
+    def indexOfDelegate(self, index: Callable[[T], bool]) -> int:
+        if index is None:
+            return -1
+        for i in range(len(self.__list)):
+            if index(self.__list[i]):
+                return i
+        return -1
+
+    def containsDelegate(self, container: Callable[[T], bool]) -> bool:
+        return self.indexOfDelegate(container) >= 0
+    
+    def visit(self, visitor: Callable[[T], None]):
+        if visitor is None:
+            return
+        for i in range(len(self.__list)):
+            visitor(self.__list[i])
+
+    def sort(self, sorter: Callable[[T, T], None]):
+        if sorter is None:
+            return
+        
+        length = self.__count
+        for i in range(length):
+            for j in range(0, length - i - 1):
+                if sorter(self.__list[j], self.__list[j + 1]) > 0:
+                    aux = self.__list[j]
+                    self.__list[j] = self.__list[j + 1]
+                    self.__list[j + 1] = aux
+        
+    def filter(self, fil: Callable[[T], bool]) -> ExList[T]:
+        if fil is None:
+            return
+        result = ExList[T]()
+        for i in range(len(self.__list)):
+            if fil(self.__list[i]):
+                result.add(self.__list[i])
+        return result
+    
+    def reverse(self):
+        n = self.__count
+        for i in range( n // 2):
+            aux = self.__list[i]
+            self.__list[i] = self.__list[n -i -1]
+            self.__list[n -i -1] = aux
+
+    def clone(self) -> ExList[T]:
+        result = ExList[T]()
+        for i in range(self.__count):
+            result.add(self.__list[i])
+        return result
+        
 
 # --- MAIN DE PRUEBA ---
 if __name__ == "__main__":
