@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import *
 from abc import ABC, abstractmethod
 from enum import Enum
-from board import Board
+from Board import Board
 
 class Color(Enum):
     WHITE = 1
