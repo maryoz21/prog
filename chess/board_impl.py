@@ -48,26 +48,141 @@ class BoardImpl(Board):
         self.__pieces.pop((x, y), None)
 
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
+        if not self.is_in_bounds(from_x, from_y):
+            return False
+        
         piece = self.__pieces.get((from_x, from_y))
+
         if piece is None:
             return False
-        if self.is_in_bounds(to_x, to_y):
-            self.delete_piece(piece)
-            piece.set_x(to_x)
-            piece.set_y(to_y)
+        
+        if not self.is_in_bounds(to_x, to_y):
+            return False
+        
+        if not piece.can_i_move(to_x, to_y, self):
+            return False
+        
+        if not self.is_move_legal(piece, to_x, to_y):
+            return False
+        
+        target_piece = self.get_piece_at(to_x, to_y)
+        if target_piece is not None:
+            self.delete_piece(target_piece)
 
-            self.add_piece(piece)
+        self.delete_piece(piece)
+        piece.set_x(to_x)
+        piece.set_y(to_y)
+        self.add_piece(piece)
 
-            return True
-        return False
+        return True
 
     def is_check(self, color: Color) -> bool:
-        pass
+        king_pos = None
+
+        for (x, y), piece in self.__pieces.items():
+            if piece.get_type_of_piece() == PieceType.KING and piece.get_color() == color:
+                king_pos = (x, y)
+                break
+        
+        if king_pos is None:
+            return False
+        
+        for piece in self.__pieces.values():
+            if piece.get_color() != color:
+                movimientos_rivales = piece.movimientos_posibles(self)
+            
+                for mov_x, mov_y in movimientos_rivales:
+                    if mov_x == king_pos[0] and mov_y == king_pos[1]:
+                        return True
+                
+    def is_move_legal(self, piece: Piece, to_x: int, to_y: int) -> bool:
+        from_x = piece.get_x()
+        from_y = piece.get_y()
+        color = piece.get_color()
+
+        target_piece = self.get_piece_at(to_x, to_y)
+        self.delete_piece(piece)
+
+        if target_piece is not None:
+            self.delete_piece(target_piece)
+
+        piece.set_x(to_x)
+        piece.set_y(to_y)
+        self.add_piece(piece)
+        is_legal = False if self.is_check(color) else True
+
+        self.delete_piece(piece)
+        piece.set_x(from_x)
+        piece.set_y(from_y)
+        self.add_piece(piece)
+
+        if target_piece is not None:
+            self.add_piece(target_piece)
+        
+        return is_legal
+     
+    def has_any_legal_move(self, color: Color) -> bool:
+        for piece in self.__pieces.values():
+            if piece.get_color() == color:
+                movimientos = piece.movimientos_posibles(self)
+
+                for mov_x, mov_y in movimientos:
+                    if self.is_move_legal(piece, mov_x, mov_y):
+                        return True
+        return False
 
     def is_checkmate(self, color: Color) -> bool:
-        pass
+        if self.is_check(color) == False:
+            return False
+        
+        tiene_movimientos = self.has_any_legal_move(color)
+
+        if tiene_movimientos:
+            return False
+        return True
+
+
 
     def is_stalemate(self, color: Color) -> bool:
-        pass
+        if self.is_check(color):
+            return False
+        
+        tiene_movimientos = self.has_any_legal_move(color)
+        if tiene_movimientos:
+            return False
+        return True
 
     
+    def print_board(self):
+        simbolos = {
+            (PieceType.KING, Color.WHITE): "♔", (PieceType.QUEEN, Color.WHITE): "♕",
+            (PieceType.ROOK, Color.WHITE): "♖", (PieceType.BISHOP, Color.WHITE): "♗",
+            (PieceType.KNIGHT, Color.WHITE): "♘", (PieceType.PAWN, Color.WHITE): "♙",
+            (PieceType.KING, Color.BLACK): "♚", (PieceType.QUEEN, Color.BLACK): "♛",
+            (PieceType.ROOK, Color.BLACK): "♜", (PieceType.BISHOP, Color.BLACK): "♝",
+            (PieceType.KNIGHT, Color.BLACK): "♞", (PieceType.PAWN, Color.BLACK): "♟",
+        }
+
+        print("\n   a b c d e f g h")
+        print("  +----------------+")
+        for y in range(8, 0, -1): # Empezamos por la fila 8 (las negras) y bajamos a la 1
+            fila_texto = f"{y} |"
+            for x in range(1, 9):
+                piece = self.get_piece_at(x, y)
+                if piece is None:
+                    # Alternamos colores para el fondo simulando las casillas (opcional pero queda bien)
+                    if (x + y) % 2 == 0:
+                        fila_texto += "· " # Casilla oscura
+                    else:
+                        fila_texto += "  " # Casilla clara
+                else:
+                    tipo = piece.get_type_of_piece()
+                    color = piece.get_color()
+                    simbolo = simbolos.get((tipo, color), "?")
+                    fila_texto += f"{simbolo} "
+            
+            fila_texto += f"| {y}"
+            print(fila_texto)
+            
+        print("  +----------------+")
+        print("   a b c d e f g h\n")

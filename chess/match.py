@@ -11,6 +11,8 @@ class Match:
         self.__board: BoardImpl = BoardImpl()
         self.turn: Color = Color.WHITE
         
+    def get_board(self) -> BoardImpl:
+        return self.__board
     def finish_match(self) -> None:
         pass
 
@@ -25,3 +27,4 @@ class Match:
         else:
             self.turn = Color.WHITE
 
+    

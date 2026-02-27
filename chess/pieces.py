@@ -2,7 +2,8 @@ from __future__ import annotations
 from typing import *
 from abc import ABC, abstractmethod
 from enum import Enum
-from board import Board
+if TYPE_CHECKING:
+    from board import Board
 
 class Color(Enum):
     WHITE = 1
@@ -38,7 +39,7 @@ class Piece(ABC):
     def get_y(self):
         return self.__y
 
-    def can_i_move(self, x: int, y: int, board: Board):
+    def can_i_move(self, x: int, y: int, board: 'Board'):
         if board.is_in_bounds(x,y):
             posible_moves = self.movimientos_posibles(board)
             for move in posible_moves:
@@ -50,7 +51,7 @@ class Piece(ABC):
 
 
     @abstractmethod
-    def movimientos_posibles(self, board: Board) -> list[tuple[int, int]]:
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         pass
 
     def get_type_of_piece(self) -> PieceType:
@@ -79,7 +80,7 @@ class Pawn(Piece):
                 return True
         return False  
 
-    def movimientos_posibles(self, board: Board) -> list[tuple[int, int]]:
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list =[]
         x = self.get_x()
         y = self.get_y()
@@ -123,7 +124,7 @@ class Rook(Piece):
     def enroque(self):
         pass
 
-    def movimientos_posibles(self, board):
+    def movimientos_posibles(self, board: 'Board'):
         movement_list =[]
 
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
@@ -150,14 +151,30 @@ class Knight(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.KNIGHT)
     
-    def movimientos_posibles(self, board):
-        return super().movimientos_posibles(board)
+    def movimientos_posibles(self, board: 'Board'):
+        movement_list = []
+
+        directions = [(2,1), (2, -1), (-2, 1), (-2, -1),(1, 2),
+                      (1, -2), (-1, 2),(-1, -2)]
+
+        for dx, dy in directions:
+            x_actual = self.get_x() + dx
+            y_actual = self.get_y() + dy
+
+            if board.is_in_bounds(x_actual, y_actual):
+                piece_at_square = board.get_piece_at(x_actual, y_actual)
+                if piece_at_square is None: 
+                    movement_list.append((x_actual, y_actual))
+                elif piece_at_square.get_color() != self.get_color():
+                    movement_list.append((x_actual, y_actual))
+
+        return movement_list
     
 class Bishop(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.BISHOP)
     
-    def movimientos_posibles(self, board):
+    def movimientos_posibles(self, board: 'Board'):
         movement_list = []
 
         directions = [(1,1), (1, -1), (-1, 1), (-1, -1)]
