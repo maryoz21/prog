@@ -8,6 +8,7 @@ class BoardImpl(Board):
     def __init__(self):
         self.__pieces: dict[tuple[int, int], Piece] = {}
         self.__size: int = 8
+        self.last_move: tuple[Piece, int, int, int, int] = None
 
     
     def get_piece_at(self, x: int, y: int):
@@ -15,6 +16,9 @@ class BoardImpl(Board):
     
     def get_size(self):
         return self.__size
+    
+    def get_last_move(self) -> tuple[Piece, int, int, int, int] | None:
+        return self.last_move
     
     def is_in_bounds(self, x: int, y: int) -> bool:
         if x is None or y is None:
@@ -74,6 +78,15 @@ class BoardImpl(Board):
         piece.set_y(to_y)
         self.add_piece(piece)
 
+
+        if piece.get_type_of_piece() == PieceType.PAWN:
+            if piece.coronar():
+                self.delete_piece(piece)
+                nueva_reina = Queen(piece.get_color(), to_x, to_y)
+                self.add_piece(nueva_reina)
+        
+        self.last_move = (piece, from_x, from_y, to_x, to_y)
+                
         return True
 
     def is_check(self, color: Color) -> bool:

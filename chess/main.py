@@ -21,16 +21,9 @@ servicio.start_position(match_id=partida_id)
 tablero = nueva_partida.get_board()
 tablero.print_board()
 
-print("\n--- TURNO DE LAS BLANCAS: Moviendo Peón de e2 a e4 ---")
-# Movemos la pieza en x=5, y=2 (Peón Rey Blanco) a x=5, y=4
-exito = servicio.move(match_id=partida_id, from_x=5, from_y=2, to_x=5, to_y=4)
-
-if exito:
-    print("¡Movimiento aceptado!")
-else:
-    print("Movimiento ilegal")
-
-# Volvemos a imprimir el tablero para ver cómo el peón ha avanzado 2 casillas
+print("\n--- MOVIENDO PEÓN a b8 PARA COMER CABALLO Y CORONAR ---")
+# Cambiamos el destino a x=2, y=8 (b8) para comer en diagonal
+tablero.move_piece(1, 7, 2, 8) 
 tablero.print_board()
 
 print("a")
