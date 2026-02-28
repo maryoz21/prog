@@ -28,9 +28,11 @@ class BoardImpl(Board):
                 return True
         return False
     
-    # Preguntar a Iker
-    def visit_squares(self):
-        pass
+    def visit_squares(self, visitor: Callable[[BoardImpl, int, int], None]):
+        for y in range(self.get_size(), 0, -1):
+            for x in range(1, self.get_size() + 1):
+                visitor(self, x, y)
+
 
     def add_piece(self, piece: Piece):
         if piece is None:
@@ -203,36 +205,3 @@ class BoardImpl(Board):
         return True
 
     
-    def print_board(self):
-        simbolos = {
-            (PieceType.KING, Color.WHITE): "♔", (PieceType.QUEEN, Color.WHITE): "♕",
-            (PieceType.ROOK, Color.WHITE): "♖", (PieceType.BISHOP, Color.WHITE): "♗",
-            (PieceType.KNIGHT, Color.WHITE): "♘", (PieceType.PAWN, Color.WHITE): "♙",
-            (PieceType.KING, Color.BLACK): "♚", (PieceType.QUEEN, Color.BLACK): "♛",
-            (PieceType.ROOK, Color.BLACK): "♜", (PieceType.BISHOP, Color.BLACK): "♝",
-            (PieceType.KNIGHT, Color.BLACK): "♞", (PieceType.PAWN, Color.BLACK): "♟",
-        }
-
-        print("\n   a b c d e f g h")
-        print("  +----------------+")
-        for y in range(8, 0, -1): # Empezamos por la fila 8 (las negras) y bajamos a la 1
-            fila_texto = f"{y} |"
-            for x in range(1, 9):
-                piece = self.get_piece_at(x, y)
-                if piece is None:
-                    # Alternamos colores para el fondo simulando las casillas (opcional pero queda bien)
-                    if (x + y) % 2 == 0:
-                        fila_texto += "· " # Casilla oscura
-                    else:
-                        fila_texto += "  " # Casilla clara
-                else:
-                    tipo = piece.get_type_of_piece()
-                    color = piece.get_color()
-                    simbolo = simbolos.get((tipo, color), "?")
-                    fila_texto += f"{simbolo} "
-            
-            fila_texto += f"| {y}"
-            print(fila_texto)
-            
-        print("  +----------------+")
-        print("   a b c d e f g h\n")

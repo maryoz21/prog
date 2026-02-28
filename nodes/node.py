@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TypeVar, Generic
+from typing import *
 import weakref
 T = TypeVar("T")
 
@@ -58,4 +58,12 @@ class Node(Generic[T]):
     
     def unlink(self):
         self.set_parent(None)
+
+    def visit(self, visitor: Callable[[Node[T]], None]):
+        if visitor is None:
+            return
+        visitor(self)
+        for child in self.__children:
+            child.visit(visitor)
     
+

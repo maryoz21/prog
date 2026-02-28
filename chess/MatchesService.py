@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Callable
 from match import Match
 from pieces import *
 from board_impl import BoardImpl
@@ -32,6 +33,12 @@ class MatchesService:
             match.switch_turn()
             return True
         return False
+    
+    def get_match_by_id(self, match_id: int) -> Match | None:
+        for m in self.matches:
+            if m.get_match_id() == match_id:
+                return m
+        return None
 
     def add_match(self, match: Match):
         for m in self.matches:
@@ -43,6 +50,19 @@ class MatchesService:
         nueva_partida = Match(match_id, "Jugador Blanco", "Jugador Negro")
         self.add_match(nueva_partida)
         self.start_position(match_id)
+
+    def visit_board(self, match_id: int, visitor: Callable[[BoardImpl, int, int], None]):
+        match = None
+        for m in self.matches:
+            if m.get_match_id() == match_id:
+                match = m
+                break
+        
+        if match is None:
+            return
+        
+        board = match.get_board()
+        board.visit_squares(visitor)
 
     def delete_match(self, match_id: int):
         for i in range(len(self.matches)):
