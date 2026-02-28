@@ -18,7 +18,7 @@ class Node(Generic[T]):
     
     def get_root_iterative(self) -> Node[T]:
         node = self
-        while node.get_parent() != None:
+        while node.get_parent() is not None:
             node = node.get_parent()
         return node
 
@@ -30,7 +30,7 @@ class Node(Generic[T]):
     def set_parent(self, node: Node[T]):
         if node is not None:
             node.add_child(self)
-        elif self.__parent != None:
+        elif self.__parent is not None:
             self.get_parent().remove_child(self)
 
     def add_child(self, node: Node[T]):

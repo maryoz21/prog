@@ -11,11 +11,14 @@ child3.set_parent(child1)
 print("Arbol inicial:")
 root.visit(lambda node: print(node.item))
 
-child3.get_root_recursive().item
-child3.get_root_iterative().item
+print("Root de child3 (recursive):", child3.get_root_recursive().item)
+print("Root de child3 (iterative):", child3.get_root_iterative().item)
+
 child1.unlink()
-child3.get_root_recursive().item
-child3.get_root_iterative().item
+
+print("Root de child3 (recursive):", child3.get_root_recursive().item)
+print("Root de child3 (iterative):", child3.get_root_iterative().item)
+
 print("Arbol final:")
 root.visit(lambda node: print(node.item))
 
