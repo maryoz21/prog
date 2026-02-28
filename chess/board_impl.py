@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import *
-from abc import ABC, abstractmethod
 from pieces import *
 from board import Board
 
@@ -11,10 +10,10 @@ class BoardImpl(Board):
         self.last_move: tuple[Piece, int, int, int, int] = None
 
     
-    def get_piece_at(self, x: int, y: int):
+    def get_piece_at(self, x: int, y: int) -> Piece | None:
         return self.__pieces.get((x, y))
     
-    def get_size(self):
+    def get_size(self) -> int:
         return self.__size
     
     def get_last_move(self) -> tuple[Piece, int, int, int, int] | None:
@@ -173,7 +172,7 @@ class BoardImpl(Board):
         return is_legal
      
     def has_any_legal_move(self, color: Color) -> bool:
-        for piece in self.__pieces.values():
+        for piece in list(self.__pieces.values()):
             if piece.get_color() == color:
                 movimientos = piece.movimientos_posibles(self)
 

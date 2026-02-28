@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import *
+from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
 from enum import Enum
 if TYPE_CHECKING:
@@ -31,19 +31,19 @@ class Piece(ABC):
     def set_has_moved(self, moved: bool):
         self.__has_moved = moved
 
-    def get_color(self):
+    def get_color(self) -> Color:
         return self.__color
     
     def set_x(self, x: int):
         self.__x = x
 
-    def get_x(self):
+    def get_x(self) -> int:
         return self.__x
     
     def set_y(self, y: int):
         self.__y = y
 
-    def get_y(self):
+    def get_y(self) -> int:
         return self.__y
 
     def can_i_move(self, x: int, y: int, board: 'Board'):
@@ -71,21 +71,13 @@ class Pawn(Piece):
     
     def coronar(self) -> bool:
         if self.get_color() == Color.BLACK:
-            if self.get_y() == 1:
-                return True
-        if self.get_color() == Color.WHITE:
-            if self.get_y() == 8:
-                return True
-        return False
+            return self.get_y() == 1
+        return self.get_y() == 8
 
     def is_pawn_in_start_position(self):
         if self.get_color() == Color.BLACK:
-            if self.get_y() == 7:
-                return True
-        if self.get_color() == Color.WHITE:
-            if self.get_y() == 2:
-                return True
-        return False  
+            return self.get_y() == 7
+        return self.get_y() == 2
 
     def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list =[]
@@ -138,11 +130,7 @@ class Rook(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.ROOK)
     
-
-    def enroque(self):
-        pass
-
-    def movimientos_posibles(self, board: 'Board'):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list =[]
 
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
@@ -169,7 +157,7 @@ class Knight(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.KNIGHT)
     
-    def movimientos_posibles(self, board: 'Board'):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list = []
 
         directions = [(2,1), (2, -1), (-2, 1), (-2, -1),(1, 2),
@@ -192,7 +180,7 @@ class Bishop(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.BISHOP)
     
-    def movimientos_posibles(self, board: 'Board'):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list = []
 
         directions = [(1,1), (1, -1), (-1, 1), (-1, -1)]
@@ -219,7 +207,7 @@ class Queen(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.QUEEN)
     
-    def movimientos_posibles(self, board: 'Board'):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list = []
 
         directions = [(1, 0), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, 0), (0, -1), (-1, -1)]
@@ -245,7 +233,7 @@ class King(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.KING)
     
-    def movimientos_posibles(self, board: 'Board'):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list = []
 
         directions = [(1, 0), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, 0), (0, -1), (-1, -1)]
@@ -278,5 +266,3 @@ class King(Piece):
 
         return movement_list
     
-    def enroque(self):
-        pass

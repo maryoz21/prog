@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import *
 from match import Match
 from pieces import *
 from board_impl import BoardImpl
@@ -106,7 +105,7 @@ class MatchesService:
         board.add_piece(King(Color.BLACK, 5, 8))
         
 
-    def who_turn(self, match_id: int) -> Color:
+    def who_turn(self, match_id: int) -> Color | None:
         for m in self.matches:
             if m.get_match_id() == match_id:
                 return m.turn

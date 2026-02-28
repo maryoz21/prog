@@ -6,7 +6,7 @@ from pieces import *
 class Board(ABC):
 
     @abstractmethod
-    def get_piece_at(self, x: int, y: int) -> Piece:
+    def get_piece_at(self, x: int, y: int) -> Piece | None:
         pass
 
     @abstractmethod
