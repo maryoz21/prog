@@ -51,6 +51,44 @@ class BoardImpl(Board):
 
         self.__pieces.pop((x, y), None)
 
+    def __captura(self, piece: Piece, from_x: int, from_y: int, to_x: int, to_y: int):
+        target_piece = self.get_piece_at(to_x, to_y)
+        al_paso = False
+        
+        if piece.get_type_of_piece() == PieceType.PAWN and from_x != to_x and target_piece is None:
+            al_paso = True
+
+        if target_piece is not None:
+            self.delete_piece(target_piece)
+        elif al_paso:
+            peon = self.get_piece_at(to_x, from_y)
+            if peon is not None:
+                self.delete_piece(peon)
+        
+    def __enroque(self, piece: Piece, from_x: int, to_x: int, from_y: int):
+        if piece.get_type_of_piece() == PieceType.KING and abs(from_x - to_x) == 2:
+            if to_x == 7:
+                torre = self.get_piece_at(8, from_y)
+                if torre is not None:
+                    self.delete_piece(torre)
+                    torre.set_x(6)
+                    self.add_piece(torre)
+                    torre.set_has_moved(True)
+            elif to_x == 3:
+                torre = self.get_piece_at(1, from_y)
+                if torre is not None:
+                    self.delete_piece(torre)
+                    torre.set_x(4)
+                    self.add_piece(torre)
+                    torre.set_has_moved(True)
+
+    def __coronar(self, piece: Piece, to_x: int, to_y: int):
+        if piece.get_type_of_piece() == PieceType.PAWN:
+            if piece.coronar():
+                self.delete_piece(piece)
+                nueva_reina = Queen(piece.get_color(), to_x, to_y)
+                self.add_piece(nueva_reina)
+
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
         if not self.is_in_bounds(from_x, from_y):
             return False
@@ -69,23 +107,18 @@ class BoardImpl(Board):
         if not self.is_move_legal(piece, to_x, to_y):
             return False
         
-        target_piece = self.get_piece_at(to_x, to_y)
-        if target_piece is not None:
-            self.delete_piece(target_piece)
+        self.__captura(piece, from_x, from_y, to_x, to_y)
 
         self.delete_piece(piece)
         piece.set_x(to_x)
         piece.set_y(to_y)
         self.add_piece(piece)
 
-
-        if piece.get_type_of_piece() == PieceType.PAWN:
-            if piece.coronar():
-                self.delete_piece(piece)
-                nueva_reina = Queen(piece.get_color(), to_x, to_y)
-                self.add_piece(nueva_reina)
+        self.__enroque(piece, from_x, to_x, from_y)
+        self.__coronar(piece, to_x, to_y)
         
         self.last_move = (piece, from_x, from_y, to_x, to_y)
+        piece.set_has_moved(True)
                 
         return True
 
@@ -99,14 +132,19 @@ class BoardImpl(Board):
         
         if king_pos is None:
             return False
-        
-        for piece in self.__pieces.values():
+        piezas: list[Piece] = list(self.__pieces.values())
+        for piece in piezas:
             if piece.get_color() != color:
-                movimientos_rivales = piece.movimientos_posibles(self)
-            
-                for mov_x, mov_y in movimientos_rivales:
-                    if mov_x == king_pos[0] and mov_y == king_pos[1]:
+                if piece.get_type_of_piece() == PieceType.KING:
+                    if abs(piece.get_x() - king_pos[0]) <= 1 and abs(piece.get_y() - king_pos[1]) <= 1:
                         return True
+                else:
+                    movimientos_rivales = piece.movimientos_posibles(self)
+        
+                    for mov_x, mov_y in movimientos_rivales:
+                        if mov_x == king_pos[0] and mov_y == king_pos[1]:
+                            return True
+        return False
                 
     def is_move_legal(self, piece: Piece, to_x: int, to_y: int) -> bool:
         from_x = piece.get_x()

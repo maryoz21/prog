@@ -35,16 +35,25 @@ class MatchesService:
         return False
 
     def add_match(self, match: Match):
-        pass
+        for m in self.matches:
+            if m.get_match_id() == match.get_match_id():
+                return
+        self.matches.append(match)
     
     def create_match(self, match_id: int):
-        pass
+        nueva_partida = Match(match_id, "Jugador Blanco", "Jugador Negro")
+        self.add_match(nueva_partida)
+        self.start_position(match_id)
 
     def delete_match(self, match_id: int):
-        pass
+        for i in range(len(self.matches)):
+            m = self.matches[i]
+            if m.get_match_id() == match_id:
+                self.matches.pop(i)
+                break
 
     def clear(self):
-        pass
+        self.matches.clear()
 
     def start_position(self, match_id: int):
         match = None
@@ -95,12 +104,12 @@ class MatchesService:
     def __add_kings(self, board: BoardImpl):
         board.add_piece(King(Color.WHITE, 5, 1))
         board.add_piece(King(Color.BLACK, 5, 8))
-
-
-    def get_status(self, match_id: int) -> str:
-        pass
+        
 
     def who_turn(self, match_id: int) -> Color:
-        pass
+        for m in self.matches:
+            if m.get_match_id() == match_id:
+                return m.turn
+        return None
 
 

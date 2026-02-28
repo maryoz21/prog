@@ -23,6 +23,13 @@ class Piece(ABC):
         self.__x = x
         self.__y = y
         self.__piece_type: PieceType = piece_type
+        self.__has_moved: bool = False
+
+    def get_has_moved(self) -> bool:
+        return self.__has_moved
+    
+    def set_has_moved(self, moved: bool):
+        self.__has_moved = moved
 
     def get_color(self):
         return self.__color
@@ -111,6 +118,17 @@ class Pawn(Piece):
                 if aimed_piece is not None:
                     if aimed_piece.get_color() != color:
                         movement_list.append((x_diag, next_y))
+        
+        ultimo_movimiento = board.get_last_move()
+
+        if ultimo_movimiento is not None:
+            last_piece, last_from_x, last_from_y, last_to_x, last_to_y = ultimo_movimiento 
+
+            if last_piece.get_type_of_piece() == PieceType.PAWN:
+                if abs(last_from_y - last_to_y) == 2:
+                    if last_to_y == y and abs(last_to_x - x) == 1:
+                        movement_list.append((last_to_x, next_y))
+
         return movement_list
                          
 
@@ -201,7 +219,7 @@ class Queen(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.QUEEN)
     
-    def movimientos_posibles(self, board):
+    def movimientos_posibles(self, board: 'Board'):
         movement_list = []
 
         directions = [(1, 0), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, 0), (0, -1), (-1, -1)]
@@ -227,7 +245,7 @@ class King(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.KING)
     
-    def movimientos_posibles(self, board):
+    def movimientos_posibles(self, board: 'Board'):
         movement_list = []
 
         directions = [(1, 0), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, 0), (0, -1), (-1, -1)]
@@ -244,6 +262,19 @@ class King(Piece):
 
                 elif piece_at_square.get_color() != self.get_color():
                         movement_list.append((x_target, y_target))
+
+        if self.get_has_moved() == False and board.is_check(self.get_color()) == False:
+            y = self.get_y()
+            torre_der = board.get_piece_at(8, y)
+            if torre_der is not None and torre_der.get_type_of_piece() == PieceType.ROOK and torre_der.get_has_moved() == False:
+                if board.get_piece_at(6, y) is None and board.get_piece_at(7, y) is None:
+                    if board.is_move_legal(self, 6, y):
+                        movement_list.append((7, y))
+            torre_izq = board.get_piece_at(1, y)
+            if torre_izq is not None and torre_izq.get_type_of_piece() == PieceType.ROOK and torre_izq.get_has_moved() == False:
+                if board.get_piece_at(2, y) is None and board.get_piece_at(3, y) is None and board.get_piece_at(4, y) is None:
+                    if board.is_move_legal(self, 4, y):
+                        movement_list.append((3, y))
 
         return movement_list
     
