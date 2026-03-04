@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import *
+from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
 from enum import Enum
-from board import Board
+if TYPE_CHECKING:
+    from board import Board
 
 class Color(Enum):
     WHITE = 1
@@ -22,23 +23,30 @@ class Piece(ABC):
         self.__x = x
         self.__y = y
         self.__piece_type: PieceType = piece_type
+        self.__has_moved: bool = False
 
-    def get_color(self):
+    def get_has_moved(self) -> bool:
+        return self.__has_moved
+    
+    def set_has_moved(self, moved: bool):
+        self.__has_moved = moved
+
+    def get_color(self) -> Color:
         return self.__color
     
     def set_x(self, x: int):
         self.__x = x
 
-    def get_x(self):
+    def get_x(self) -> int:
         return self.__x
     
     def set_y(self, y: int):
         self.__y = y
 
-    def get_y(self):
+    def get_y(self) -> int:
         return self.__y
 
-    def can_i_move(self, x: int, y: int, board: Board):
+    def can_i_move(self, x: int, y: int, board: 'Board'):
         if board.is_in_bounds(x,y):
             posible_moves = self.movimientos_posibles(board)
             for move in posible_moves:
@@ -50,7 +58,7 @@ class Piece(ABC):
 
 
     @abstractmethod
-    def movimientos_posibles(self, board: Board) -> list[tuple[int, int]]:
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         pass
 
     def get_type_of_piece(self) -> PieceType:
@@ -63,23 +71,15 @@ class Pawn(Piece):
     
     def coronar(self) -> bool:
         if self.get_color() == Color.BLACK:
-            if self.get_y() == 1:
-                return True
-        if self.get_color() == Color.WHITE:
-            if self.get_y() == 8:
-                return True
-        return False
+            return self.get_y() == 1
+        return self.get_y() == 8
 
     def is_pawn_in_start_position(self):
         if self.get_color() == Color.BLACK:
-            if self.get_y() == 7:
-                return True
-        if self.get_color() == Color.WHITE:
-            if self.get_y() == 2:
-                return True
-        return False  
+            return self.get_y() == 7
+        return self.get_y() == 2
 
-    def movimientos_posibles(self, board: Board) -> list[tuple[int, int]]:
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list =[]
         x = self.get_x()
         y = self.get_y()
@@ -110,6 +110,17 @@ class Pawn(Piece):
                 if aimed_piece is not None:
                     if aimed_piece.get_color() != color:
                         movement_list.append((x_diag, next_y))
+        
+        ultimo_movimiento = board.get_last_move()
+
+        if ultimo_movimiento is not None:
+            last_piece, last_from_x, last_from_y, last_to_x, last_to_y = ultimo_movimiento 
+
+            if last_piece.get_type_of_piece() == PieceType.PAWN:
+                if abs(last_from_y - last_to_y) == 2:
+                    if last_to_y == y and abs(last_to_x - x) == 1:
+                        movement_list.append((last_to_x, next_y))
+
         return movement_list
                          
 
@@ -119,11 +130,7 @@ class Rook(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.ROOK)
     
-
-    def enroque(self):
-        pass
-
-    def movimientos_posibles(self, board):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list =[]
 
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
@@ -150,14 +157,30 @@ class Knight(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.KNIGHT)
     
-    def movimientos_posibles(self, board):
-        return super().movimientos_posibles(board)
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
+        movement_list = []
+
+        directions = [(2,1), (2, -1), (-2, 1), (-2, -1),(1, 2),
+                      (1, -2), (-1, 2),(-1, -2)]
+
+        for dx, dy in directions:
+            x_actual = self.get_x() + dx
+            y_actual = self.get_y() + dy
+
+            if board.is_in_bounds(x_actual, y_actual):
+                piece_at_square = board.get_piece_at(x_actual, y_actual)
+                if piece_at_square is None: 
+                    movement_list.append((x_actual, y_actual))
+                elif piece_at_square.get_color() != self.get_color():
+                    movement_list.append((x_actual, y_actual))
+
+        return movement_list
     
 class Bishop(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.BISHOP)
     
-    def movimientos_posibles(self, board):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list = []
 
         directions = [(1,1), (1, -1), (-1, 1), (-1, -1)]
@@ -184,7 +207,7 @@ class Queen(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.QUEEN)
     
-    def movimientos_posibles(self, board):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list = []
 
         directions = [(1, 0), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, 0), (0, -1), (-1, -1)]
@@ -210,7 +233,7 @@ class King(Piece):
     def __init__(self, color, x, y):
         super().__init__(color, x, y, PieceType.KING)
     
-    def movimientos_posibles(self, board):
+    def movimientos_posibles(self, board: 'Board') -> list[tuple[int, int]]:
         movement_list = []
 
         directions = [(1, 0), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, 0), (0, -1), (-1, -1)]
@@ -228,7 +251,18 @@ class King(Piece):
                 elif piece_at_square.get_color() != self.get_color():
                         movement_list.append((x_target, y_target))
 
+        if self.get_has_moved() == False and board.is_check(self.get_color()) == False:
+            y = self.get_y()
+            torre_der = board.get_piece_at(8, y)
+            if torre_der is not None and torre_der.get_type_of_piece() == PieceType.ROOK and torre_der.get_has_moved() == False:
+                if board.get_piece_at(6, y) is None and board.get_piece_at(7, y) is None:
+                    if board.is_move_legal(self, 6, y):
+                        movement_list.append((7, y))
+            torre_izq = board.get_piece_at(1, y)
+            if torre_izq is not None and torre_izq.get_type_of_piece() == PieceType.ROOK and torre_izq.get_has_moved() == False:
+                if board.get_piece_at(2, y) is None and board.get_piece_at(3, y) is None and board.get_piece_at(4, y) is None:
+                    if board.is_move_legal(self, 4, y):
+                        movement_list.append((3, y))
+
         return movement_list
     
-    def enroque(self):
-        pass
