@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import *
-from pieces import *
-from board import Board
+from model.pieces import *
+from model.board import Board
 
 class BoardImpl(Board):
     def __init__(self):

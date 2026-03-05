@@ -1,5 +1,5 @@
-from MatchesService import MatchesService
-from utils import print_square
+from services.MatchesService import MatchesService
+from model.utils import print_square
 
 
 

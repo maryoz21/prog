@@ -1,6 +1,6 @@
 from __future__ import annotations
-from board_impl import BoardImpl
-from pieces import Color
+from model.board_impl import BoardImpl
+from model.pieces import Color
 
 class Match:
     def __init__(self, match_id: int, player1: str, player2: str):

@@ -1,5 +1,5 @@
-from board_impl import BoardImpl
-from pieces import PieceType, Color
+from model.board_impl import BoardImpl
+from model.pieces import PieceType, Color
 # Me he hecho esto para verlo de manera mas visual
 def print_square(board: BoardImpl, x: int, y: int):
     simbolos = {

@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import Callable
-from match import Match
-from pieces import *
-from board_impl import BoardImpl
+from services.match import Match
+from model.pieces import *
+from model.board_impl import BoardImpl
 
 class MatchesService:
     def __init__(self):

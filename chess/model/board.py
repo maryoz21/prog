@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import *
 from abc import ABC, abstractmethod
-from pieces import *
+from model.pieces import *
 
 class Board(ABC):
 

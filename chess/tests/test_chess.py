@@ -1,9 +1,9 @@
 import unittest
 
-from pieces import Pawn, Rook, Knight, Bishop, Queen, King, Color, PieceType
-from board_impl import BoardImpl
-from match import Match
-from MatchesService import MatchesService
+from model.pieces import Pawn, Rook, Knight, Bishop, Queen, King, Color, PieceType
+from model.board_impl import BoardImpl
+from services.match import Match
+from services.MatchesService import MatchesService
 
 class Test1Creacion(unittest.TestCase):
     def test_creacion_servicio(self):
